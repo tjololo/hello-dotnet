@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
@@ -11,13 +10,9 @@ namespace hello_dotnet.Controllers
     {
 
         private readonly ILogger<HelloWorldController> _logger;
-        private readonly IHostApplicationLifetime _appLifetime;
-
-        [Obsolete]
-        public HelloWorldController(ILogger<HelloWorldController> logger, IHostApplicationLifetime appLifetime)
+        public HelloWorldController(ILogger<HelloWorldController> logger)
         {
             _logger = logger;
-            _appLifetime = appLifetime;
         }
 
         [HttpGet("hello")]

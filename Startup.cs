@@ -1,3 +1,4 @@
+using System.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,9 @@ namespace hello_dotnet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.Configure<HostOptions>(options => {
+                options.ShutdownTimeout = TimeSpan.FromSeconds(30);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
