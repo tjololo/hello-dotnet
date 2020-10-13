@@ -6,11 +6,11 @@ using Microsoft.Extensions.Hosting;
 namespace hello_dotnet.Controllers
 {
     [ApiController]
-    public class HelloWorldController : ControllerBase
+    public class HelloController : ControllerBase
     {
 
-        private readonly ILogger<HelloWorldController> _logger;
-        public HelloWorldController(ILogger<HelloWorldController> logger)
+        private readonly ILogger<HelloController> _logger;
+        public HelloController(ILogger<HelloController> logger)
         {
             _logger = logger;
         }

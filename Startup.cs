@@ -25,9 +25,11 @@ namespace hello_dotnet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            int timeout = GetShutdownTimeout();
             services.AddControllers();
-            services.Configure<HostOptions>(options => {
-                options.ShutdownTimeout = TimeSpan.FromSeconds(30);
+            services.Configure<HostOptions>(options =>
+            {
+                    options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);
             });
         }
 
@@ -47,6 +49,16 @@ namespace hello_dotnet
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private int GetShutdownTimeout()
+        {
+            var envvar = System.Environment.GetEnvironmentVariable("SHUTDOWN_TIMEOUT");
+            if(Int32.TryParse(envvar, out int timeout)) {
+                return timeout;
+            } else {
+                return 5;
+            }
         }
     }
 }
