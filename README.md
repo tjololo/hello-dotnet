@@ -20,4 +20,4 @@ Returns a simple hello message
   
   sleep=[integer] 
   
-  _Number of seconds the server should sleep befor returning an answere_
+  _Number of seconds the server should sleep befor returning an answere. Default: 0_
