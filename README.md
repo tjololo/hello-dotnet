@@ -21,3 +21,14 @@ Returns a simple hello message
   sleep=[integer] 
   
   _Number of seconds the server should sleep befor returning an answere. Default: 0_
+
+* Examples
+  
+  _Request that returns immediately_
+  ```
+  curl -X GET http://example.local/hello
+  ```
+  _Request that returns after waiting 10 seconds
+  ```
+  curl  -X GET http://example.local/hello?sleep=10
+  ```
