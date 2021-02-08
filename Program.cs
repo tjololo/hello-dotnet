@@ -18,6 +18,13 @@ namespace hello_dotnet
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingCtx, config) =>
+                {
+                    config.AddJsonFile("/config/appsettings.json", optional: true, reloadOnChange: true);
+                    string configBasePathEnv = Environment.GetEnvironmentVariable("CONFIG_PATH");
+                    string configPath = $"{configBasePathEnv}/appsettings.json";
+                    config.AddJsonFile(configPath, optional: true, reloadOnChange: true);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

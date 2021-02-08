@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using hello_dotnet.Downstream;
 
 namespace hello_dotnet
 {
@@ -27,6 +28,8 @@ namespace hello_dotnet
         {
             int timeout = GetShutdownTimeout();
             services.AddControllers();
+            services.AddHttpClient();
+            services.AddScoped<IDownstreamService, DownstreamHttpService>();
             services.Configure<HostOptions>(options =>
             {
                     options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);
