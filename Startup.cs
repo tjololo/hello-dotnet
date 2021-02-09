@@ -29,7 +29,8 @@ namespace hello_dotnet
             int timeout = GetShutdownTimeout();
             services.AddControllers();
             services.AddHttpClient();
-            services.AddScoped<IDownstreamService, SimpleDownstreamService>();
+            services.AddMemoryCache();
+            services.AddScoped<IDownstreamService, MemCacheDownStreamService>();
             services.Configure<HostOptions>(options =>
             {
                     options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);

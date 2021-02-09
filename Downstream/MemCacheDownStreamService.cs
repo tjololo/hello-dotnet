@@ -1,9 +1,10 @@
+using System;
+using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
-using System;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace hello_dotnet.Downstream
 {
@@ -14,11 +15,13 @@ namespace hello_dotnet.Downstream
         private readonly IConfiguration _config;
         private readonly ILogger<MemCacheDownStreamService> _logger;
         private readonly HttpClient _httpClient;
-        public MemCacheDownStreamService(ILogger<MemCacheDownStreamService> logger, IConfiguration configuration, HttpClient httpClient) : base(logger, httpClient)
+        private IMemoryCache _cache;
+        public MemCacheDownStreamService(ILogger<MemCacheDownStreamService> logger, IConfiguration configuration, HttpClient httpClient, IMemoryCache cache) : base(logger, httpClient)
         {
             _config = configuration;
             _logger = logger;
             _httpClient = httpClient;
+            _cache = cache;
         }
         public async Task<string> GetAsyncDownstream()
         {
@@ -26,7 +29,12 @@ namespace hello_dotnet.Downstream
             if (_config["Downstream:Enabled"] == "True")
             {
                 var downStream = _config["Downstream:URL"];
-                return await DoDownstreamHttpCall(downStream);
+                var response = "";
+                if (!_cache.TryGetValue(downStream, out response)) {
+                    response = await DoDownstreamHttpCall(downStream);
+                    _cache.Set(downStream, response, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(5)).SetAbsoluteExpiration(TimeSpan.FromSeconds(30)));
+                }
+                return response;
             }
             else
             {
