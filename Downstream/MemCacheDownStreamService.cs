@@ -7,12 +7,14 @@ using System;
 
 namespace hello_dotnet.Downstream
 {
-    public class SimpleDownstreamService : DownstreamBase, IDownstreamService
+
+
+    public class MemCacheDownStreamService : DownstreamBase, IDownstreamService
     {
         private readonly IConfiguration _config;
-        private readonly ILogger<SimpleDownstreamService> _logger;
+        private readonly ILogger<MemCacheDownStreamService> _logger;
         private readonly HttpClient _httpClient;
-        public SimpleDownstreamService(ILogger<SimpleDownstreamService> logger, IConfiguration configuration, HttpClient httpClient) : base(logger, httpClient)
+        public MemCacheDownStreamService(ILogger<MemCacheDownStreamService> logger, IConfiguration configuration, HttpClient httpClient) : base(logger, httpClient)
         {
             _config = configuration;
             _logger = logger;

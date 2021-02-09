@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -31,5 +32,19 @@ namespace hello_dotnet.Downstream
                     throw new DownstreamConfigException("downstream call returned exception", e);
                 }
             }
+    }
+
+    public interface IDownstreamService
+    {
+        Task<string> GetAsyncDownstream();
+    }
+    
+    public class DownstreamConfigException : Exception
+    {
+        public DownstreamConfigException() { }
+
+        public DownstreamConfigException(string message) : base(message) { }
+
+        public DownstreamConfigException(string message, Exception inner) : base(message, inner) { }
     }
 }
