@@ -16,6 +16,10 @@ namespace hello_dotnet.Downstream
         private readonly ILogger<MemCacheDownStreamService> _logger;
         private readonly HttpClient _httpClient;
         private IMemoryCache _cache;
+
+        private readonly MemoryCacheEntryOptions memCacheOptions = new MemoryCacheEntryOptions()
+        .SetSlidingExpiration(TimeSpan.FromSeconds(5))
+        .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
         public MemCacheDownStreamService(ILogger<MemCacheDownStreamService> logger, IConfiguration configuration, HttpClient httpClient, IMemoryCache cache) : base(logger, httpClient)
         {
             _config = configuration;
@@ -32,7 +36,7 @@ namespace hello_dotnet.Downstream
                 var response = "";
                 if (!_cache.TryGetValue(downStream, out response)) {
                     response = await DoDownstreamHttpCall(downStream);
-                    _cache.Set(downStream, response, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(5)).SetAbsoluteExpiration(TimeSpan.FromSeconds(30)));
+                    _cache.Set(downStream, response, memCacheOptions);
                 }
                 return response;
             }
