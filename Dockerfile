@@ -13,6 +13,6 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.8-alpine3.12 AS final
 WORKDIR /app
 COPY --from=build-env /app/out .
-#RUN addgroup -g 3000 dotnet && adduser -u 1000 -G dotnet -D -s /bin/false dotnet
-#USER dotnet
+RUN addgroup -g 3000 dotnet && adduser -u 1000 -G dotnet -D -s /bin/false dotnet
+USER dotnet
 ENTRYPOINT ["dotnet", "hello-dotnet.dll"]
