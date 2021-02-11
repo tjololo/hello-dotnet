@@ -32,3 +32,4 @@ Returns a simple hello message
   ```
   curl  -X GET http://example.local/hello?sleep=10
   ```
+
