@@ -36,7 +36,7 @@ namespace hello_dotnet.Downstream
 
     public interface IDownstreamService
     {
-        Task<string> GetAsyncDownstream();
+        Task<CacheResponse> GetAsyncDownstream(string name);
     }
     
     public class DownstreamConfigException : Exception

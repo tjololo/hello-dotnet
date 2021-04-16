@@ -19,18 +19,18 @@ namespace hello_dotnet.Controllers
         }
 
         [HttpGet("hello")]
-        public async Task<Hello> Get(int sleep = 0)
+        public async Task<string> Get(int sleep = 0, string name = "")
         {
             System.Threading.Thread.Sleep(sleep * 1000);
-            var h = new Hello("Hello");
-            return await Task.FromResult(h);
+            return await Task.FromResult(string.Join(" ", "Hello", name).Trim());
         }
+        
         [HttpGet("calldown")]
-        public async Task<ActionResult<HttpResponseMessage>> Downstream()
+        public async Task<ActionResult<HttpResponseMessage>> Downstream(string name = "")
         {
             try {
-                string downstreamResponse = await _downstream.GetAsyncDownstream();
-                return await Task.FromResult(Ok(new Hello(downstreamResponse)));
+                CacheResponse downstreamResponse = await _downstream.GetAsyncDownstream(name);
+                return await Task.FromResult(Ok(downstreamResponse));
             } catch (DownstreamConfigException e) {
                 _logger.LogError("Configuration error with downstream", e);
                 return await Task.FromResult(StatusCode(503, "Downstream call failed"));

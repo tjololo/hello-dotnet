@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using hello_dotnet.Downstream;
+using StackExchange.Redis.Extensions.Newtonsoft;
+using StackExchange.Redis.Extensions.Core.Configuration;
 
 namespace hello_dotnet
 {
@@ -26,14 +28,30 @@ namespace hello_dotnet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisConfigured = Configuration["Cache:RedisConfigured"];
             int timeout = GetShutdownTimeout();
             services.AddControllers();
             services.AddHttpClient();
-            services.AddMemoryCache();
-            services.AddScoped<IDownstreamService, MemCacheDownStreamService>();
+            if (redisConfigured == "True")
+            {
+                services.AddStackExchangeRedisExtensions<NewtonsoftSerializer>((options) =>
+                {
+                    return Configuration.GetSection("Redis").Get<RedisConfiguration>();
+                });
+                services.AddScoped<IDownstreamService, RedisChacheDownstreamService>();
+            }
+            else if(Configuration["Cache:MemCache"] == "True")
+            {
+                services.AddMemoryCache();
+                services.AddScoped<IDownstreamService, MemCacheDownStreamService>();
+            }
+            else 
+            {
+                services.AddScoped<IDownstreamService, SimpleDownstreamService>();
+            }
             services.Configure<HostOptions>(options =>
             {
-                    options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);
+                options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);
             });
         }
 
@@ -58,9 +76,12 @@ namespace hello_dotnet
         private int GetShutdownTimeout()
         {
             var envvar = System.Environment.GetEnvironmentVariable("SHUTDOWN_TIMEOUT");
-            if(Int32.TryParse(envvar, out int timeout)) {
+            if (Int32.TryParse(envvar, out int timeout))
+            {
                 return timeout;
-            } else {
+            }
+            else
+            {
                 return 5;
             }
         }

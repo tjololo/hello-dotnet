@@ -18,17 +18,17 @@ namespace hello_dotnet.Downstream
             _logger = logger;
             _httpClient = httpClient;
         }
-        public async Task<string> GetAsyncDownstream()
+        public async Task<CacheResponse> GetAsyncDownstream(string name)
         {
             var enabled = _config["Downstream:Enabled"];
             if (_config["Downstream:Enabled"] == "True")
             {
                 var downStream = _config["Downstream:URL"];
-                return await DoDownstreamHttpCall(downStream);
+                return new CacheResponse(await DoDownstreamHttpCall(downStream), "no cache");
             }
             else
             {
-                return await Task.FromResult("No downstream configured");
+                return await Task.FromResult(new CacheResponse("No downstream configured", "N/A"));
             }
         }
     }

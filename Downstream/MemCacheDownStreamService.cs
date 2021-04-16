@@ -27,22 +27,24 @@ namespace hello_dotnet.Downstream
             _httpClient = httpClient;
             _cache = cache;
         }
-        public async Task<string> GetAsyncDownstream()
+        public async Task<CacheResponse> GetAsyncDownstream(string name)
         {
             var enabled = _config["Downstream:Enabled"];
             if (_config["Downstream:Enabled"] == "True")
             {
                 var downStream = _config["Downstream:URL"];
                 var response = "";
-                if (!_cache.TryGetValue(downStream, out response)) {
+                var cacheStatus = "memcache hit for " + name;
+                if (!_cache.TryGetValue(name, out response)) {
                     response = await DoDownstreamHttpCall(downStream);
-                    _cache.Set(downStream, response, memCacheOptions);
+                    _cache.Set(name, response, memCacheOptions);
+                    cacheStatus = "memcache miss for " + name;
                 }
-                return response;
+                return new CacheResponse(response, cacheStatus);
             }
             else
             {
-                return await Task.FromResult("No downstream configured");
+                return await Task.FromResult(new CacheResponse("No downstream configured", "N/A"));
             }
         }
     }
