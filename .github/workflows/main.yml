@@ -4,43 +4,6 @@ on:
     branches: main
 
 jobs:
-  check:
-    name: Check for terraform changes
-    runs-on: ubuntu-latest
-    outputs:
-      terra_change: ${{ steps.check_files.outputs.terra_change }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-      - name: check for modified terraform files
-        id: check_files
-        run: |
-          echo "======== list modified files ========"
-          git diff --name-only HEAD^ HEAD
-
-          echo "======== check paths of modified files ========"
-          git diff --name-only HEAD^ HEAD > files.txt
-          while IFS= read -r file
-          do
-            echo $file
-            if [[ $file == terraform/* ]]; then
-              echo "This modified file is under the 'terraform' folder."
-              echo "::set-output name=terra_change::true"
-              break
-            else
-              echo "::set-output name=terra_change::false"
-            fi
-          done < files.txt
-  terraform:
-    name: Run terraform
-    needs: check
-    if: needs.check.outputs.terra_change == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: dummy task
-        run: echo "There are changes in the terraform folder. Terraform steps are executed"
   main:
     runs-on: ubuntu-latest
     steps:
@@ -59,6 +22,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/${{ github.actor }}/hello-dotnet:latest
+          tags: ghcr.io/${{ github.actor }}/${{ github.repository.name }}:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
