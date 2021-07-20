@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
-using System;
 
 namespace hello_dotnet.Downstream
 {
