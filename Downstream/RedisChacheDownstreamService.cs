@@ -57,7 +57,7 @@ namespace hello_dotnet.Downstream
             }
             else
             {
-                System.Threading.Thread.Sleep(3000);
+                await Task.Delay(3000);
                 return "test";
             }
         }

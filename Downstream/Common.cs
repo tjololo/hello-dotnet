@@ -25,7 +25,7 @@ namespace hello_dotnet.Downstream
                 {
                     HttpResponseMessage resp = await _httpClient.GetAsync(url);
                     resp.EnsureSuccessStatusCode();
-                    return resp.Content.ReadAsStringAsync().Result;
+                    return await resp.Content.ReadAsStringAsync();
                 }
                 catch (HttpRequestException e)
                 {
