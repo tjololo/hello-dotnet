@@ -21,7 +21,8 @@ namespace hello_dotnet.Controllers
         [HttpGet("hello")]
         public async Task<string> Get(int sleep = 0, string name = "")
         {
-            System.Threading.Thread.Sleep(sleep * 1000);
+            await Task.Delay(sleep * 1000);
+            _logger.LogInformation("Hello {name}", name);
             return await Task.FromResult(string.Join(" ", "Hello", name).Trim());
         }
         
