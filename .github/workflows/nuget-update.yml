@@ -24,7 +24,6 @@ jobs:
       with:
         searchFor: 'outdated'
         versionToSelect: 'latest'
-        ignore: StackExchange.Redis.Extensions.AspNetCore
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
