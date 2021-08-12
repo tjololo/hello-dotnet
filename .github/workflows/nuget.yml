@@ -3,6 +3,7 @@ on:
   push:
     branches: nuget
 
+
 jobs:
   build:
     name: "Update all nugets to latest version"
@@ -25,3 +26,7 @@ jobs:
         versionToSelect: 'latest'
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
+      with:
+        title: "Updated nuget dependencies"
+        reviewers: tjololo
+        labels: dependencies
