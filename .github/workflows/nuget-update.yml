@@ -1,7 +1,7 @@
 name: Update nuget dependencies
-on:
-  push:
-    branches: nuget
+on: 
+  schedule:
+    - cron: '0 8 * * 4' # every thursday AM 8:00
 
 
 jobs:
