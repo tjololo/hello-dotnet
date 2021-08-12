@@ -19,7 +19,7 @@ jobs:
       run: dotnet restore
 
     - name: update packages
-      uses: bchir/nuget-update@v1.0.0
+      uses: bchir/update-nuget@V1.0.0
       with:
         searchFor: 'outdated'
         versionToSelect: 'latest'
