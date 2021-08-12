@@ -1,0 +1,27 @@
+name: Update nuget dependencies
+on:
+  push:
+    branches: nuget
+
+jobs:
+  build:
+    name: "Update all nugets to latest version"
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: update packages
+      uses: bchir/nuget-update@v1.0.0
+      with:
+        searchFor: 'outdated'
+        versionToSelect: 'latest'
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
