@@ -24,7 +24,7 @@ jobs:
       id: update
       uses: tjololo/nuget-dependencies-update@main
       with:
-        version-limit: 'minor'
+        version-limit: 'patch'
         comment-updated: true
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
