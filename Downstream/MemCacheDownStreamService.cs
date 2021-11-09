@@ -34,7 +34,8 @@ namespace hello_dotnet.Downstream
                 var downStream = _config["Downstream:URL"];
                 var response = "";
                 var cacheStatus = "memcache hit for " + name;
-                if (!_cache.TryGetValue(name, out response)) {
+                if (!_cache.TryGetValue(name, out response))
+                {
                     response = await DoDownstreamHttpCall(downStream);
                     _cache.Set(name, response, memCacheOptions);
                     cacheStatus = "memcache miss for " + name;

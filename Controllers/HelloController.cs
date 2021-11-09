@@ -25,14 +25,17 @@ namespace hello_dotnet.Controllers
             _logger.LogInformation("Hello {name}.", name);
             return await Task.FromResult(string.Join(" ", "Hello", name).Trim());
         }
-        
+
         [HttpGet("calldown")]
         public async Task<ActionResult<HttpResponseMessage>> Downstream(string name = "")
         {
-            try {
+            try
+            {
                 CacheResponse downstreamResponse = await _downstream.GetAsyncDownstream(name);
                 return await Task.FromResult(Ok(downstreamResponse));
-            } catch (DownstreamConfigException e) {
+            }
+            catch (DownstreamConfigException e)
+            {
                 _logger.LogError("Configuration error with downstream", e);
                 return await Task.FromResult(StatusCode(503, "Downstream call failed"));
             }
