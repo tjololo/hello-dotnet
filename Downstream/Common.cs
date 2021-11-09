@@ -9,35 +9,37 @@ namespace hello_dotnet.Downstream
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
-        public DownstreamBase(ILogger logger, HttpClient httpClient) {
+        public DownstreamBase(ILogger logger, HttpClient httpClient)
+        {
             _logger = logger;
             _httpClient = httpClient;
         }
 
-        protected async Task<string> DoDownstreamHttpCall(string url) {
-                if (url == null && url != "")
-                {
-                    _logger.LogError("Downstream enabled but not URL set for downstream");
-                    throw new DownstreamConfigException("Missing url for downstream");
-                }
-                try
-                {
-                    HttpResponseMessage resp = await _httpClient.GetAsync(url);
-                    resp.EnsureSuccessStatusCode();
-                    return await resp.Content.ReadAsStringAsync();
-                }
-                catch (HttpRequestException e)
-                {
-                    throw new DownstreamConfigException("downstream call returned exception", e);
-                }
+        protected async Task<string> DoDownstreamHttpCall(string url)
+        {
+            if (url == null && url != "")
+            {
+                _logger.LogError("Downstream enabled but not URL set for downstream");
+                throw new DownstreamConfigException("Missing url for downstream");
             }
+            try
+            {
+                HttpResponseMessage resp = await _httpClient.GetAsync(url);
+                resp.EnsureSuccessStatusCode();
+                return await resp.Content.ReadAsStringAsync();
+            }
+            catch (HttpRequestException e)
+            {
+                throw new DownstreamConfigException("downstream call returned exception", e);
+            }
+        }
     }
 
     public interface IDownstreamService
     {
         Task<CacheResponse> GetAsyncDownstream(string name);
     }
-    
+
     public class DownstreamConfigException : Exception
     {
         public DownstreamConfigException() { }

@@ -26,7 +26,7 @@ namespace hello_dotnet.Downstream
         public async Task<CacheResponse> GetAsyncDownstream(string name)
         {
             IRedisDatabase redis = _cache.GetDbFromConfiguration();
-            string result = "", cacheStatus = "rediscache HIT for " + name;;
+            string result = "", cacheStatus = "rediscache HIT for " + name;
             try
             {
                 result = await redis.GetAsync<string>(name);

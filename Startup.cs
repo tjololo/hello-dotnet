@@ -26,6 +26,7 @@ namespace hello_dotnet
             int timeout = GetShutdownTimeout();
             services.AddControllers();
             services.AddHttpClient();
+            services.AddApplicationInsightsTelemetry();
             if (redisConfigured == "True")
             {
                 services.AddStackExchangeRedisExtensions<NewtonsoftSerializer>((options) =>
