@@ -23,6 +23,10 @@ namespace hello_dotnet.Controllers
         {
             await Task.Delay(sleep * 1000);
             _logger.LogInformation("Hello {name}.", name);
+            foreach (var header in Request.Headers)
+            {
+                _logger.LogInformation("{header}: {value}", header.Key, header.Value);
+            }
             return await Task.FromResult(string.Join(" ", "Hello", name).Trim());
         }
 

@@ -5,8 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using hello_dotnet.Downstream;
+using hello_dotnet.Factories;
 using StackExchange.Redis.Extensions.Newtonsoft;
 using StackExchange.Redis.Extensions.Core.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace hello_dotnet
 {
@@ -27,6 +29,7 @@ namespace hello_dotnet
             services.AddControllers();
             services.AddHttpClient();
             services.AddApplicationInsightsTelemetry();
+            services.AddSingleton<IHttpContextFactory>(sp => new TracingHttpContextFactory(sp));
             if (redisConfigured == "True")
             {
                 services.AddStackExchangeRedisExtensions<NewtonsoftSerializer>((options) =>
