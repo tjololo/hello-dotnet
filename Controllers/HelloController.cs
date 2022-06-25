@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using hello_dotnet.Downstream;
+using hello_dotnet.Models;
 using hello_dotnet.Utils;
 
 namespace hello_dotnet.Controllers
@@ -20,15 +22,22 @@ namespace hello_dotnet.Controllers
         }
 
         [HttpGet("hello")]
-        public async Task<string> Get(int sleep = 0, string name = "")
+        public async Task<HelloResponse> Get(int sleep = 0, string name = "")
         {
             await Task.Delay(sleep * 1000);
-            _logger.LogInformation("Hello {name}.", name);
+            var headers = new Dictionary<string, string>();
             foreach (var header in Request.Headers)
             {
-                _logger.LogInformation("{header}: {value}", header.Key, header.Value);
+                headers.Add(header.Key, header.Value);
             }
-            return await Task.FromResult(string.Join(" ", "Hello", name).Trim());
+
+            var resp = new HelloResponse()
+            {
+                Message = "Hello",
+                ReqParam = name,
+                ServerHeaders = headers
+            };
+            return await Task.FromResult(resp);
         }
 
         [HttpGet("calldown")]
