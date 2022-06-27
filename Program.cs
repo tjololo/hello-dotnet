@@ -66,6 +66,7 @@ void ConfigureService(IServiceCollection services, ConfigurationManager config)
         services.AddScoped<IDownstreamService, SimpleDownstreamService>();
     }
     services.AddTransient<IRequestHandler, RequestHandler>();
+    services.AddTransient<IEventReceiver, EventsReceivers>();
     services.Configure<HostOptions>(options =>
     {
         options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);

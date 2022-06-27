@@ -8,12 +8,16 @@ public class RequestHandler : IRequestHandler
 {
     public event AsyncEventHandler<RequestEventArgs>? RequestReceived;
     private readonly ILogger<RequestHandler> logger;
-
+    
     public delegate Task AsyncEventHandler<T>(object? sender, T e);
 
-    public RequestHandler(ILogger<RequestHandler> logger)
+    public RequestHandler(ILogger<RequestHandler> logger, IEventReceiver? eventReceiver)
     {
         this.logger = logger;
+        if (eventReceiver is not null)
+        {
+            RegisterRequestReceiverEventHandler(eventReceiver.OnRequestProcessed);
+        }
     }
 
     public async Task OnRequestReceived(string method, int delay)
@@ -26,8 +30,20 @@ public class RequestHandler : IRequestHandler
         }
     }
 
+    public async Task onRequestProcessed(object? sender, RequestEventArgs args)
+    {
+        logger.LogInformation($"Event processing for method {args.Method}");
+        await Task.Delay(args.Delay);
+        logger.LogInformation("Event processed 1111111");
+    }
+
     public async Task RegisterHandlers()
     {
-        RequestReceived += EventsReceivers.onRequestProcessed;
+        RequestReceived += this.onRequestProcessed;
+    }
+
+    public void RegisterRequestReceiverEventHandler(AsyncEventHandler<RequestEventArgs> a)
+    {
+        RequestReceived += a;
     }
 }

@@ -5,13 +5,18 @@ using Microsoft.Extensions.Logging;
 
 namespace hello_dotnet.Events;
 
-public class EventsReceivers
+public class EventsReceivers: IEventReceiver
 {
-
-    public static async Task onRequestProcessed(object? sender, RequestEventArgs args)
+    private readonly ILogger<EventsReceivers> logger;
+    public EventsReceivers(ILogger<EventsReceivers> logger)
     {
-        Console.WriteLine($"Event processing for method {args.Method}");
+        this.logger = logger;
+    }
+
+    public async Task OnRequestProcessed(object? sender, RequestEventArgs args)
+    {
+        logger.LogInformation($"Event processing for method {args.Method}");
         await Task.Delay(args.Delay);
-        Console.WriteLine("Event processed");
+        logger.LogInformation("Event processed");
     }
 }
