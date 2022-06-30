@@ -12,10 +12,17 @@ public class EventsReceiver2: IEventReceiver
         this.logger = logger;
     }
 
-    public async Task OnRequestProcessed(object? sender, RequestEventArgs args)
+    public async Task PreRequest(object? sender, RequestEventArgs args)
     {
-        logger.LogInformation($"Event processing for method {args.Method} in receiver 2");
+        logger.LogInformation($"Pre Event processing for method {args.Method} in receiver 2");
         await Task.Delay(args.Delay);
-        logger.LogInformation("Event processed in receiver 2");
+        logger.LogInformation("Pre Event processed in receiver 2");
+    }
+    
+    public async Task PostRequest(object? sender, RequestEventArgs args)
+    {
+        logger.LogInformation($"Post Event processing for method {args.Method} in receiver 2");
+        await Task.Delay(args.Delay);
+        logger.LogInformation("Post Event processed in receiver 2");
     }
 }

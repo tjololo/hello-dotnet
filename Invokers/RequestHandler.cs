@@ -8,9 +8,9 @@ namespace hello_dotnet.Invokers;
 
 public class RequestHandler : IRequestHandler
 {
-    public event AsyncEventHandler<RequestEventArgs>? RequestReceived;
+    public event AsyncEventHandler<RequestEventArgs>? PreRequest;
+    public event AsyncEventHandler<RequestEventArgs>? PostRequest;
     private readonly ILogger<RequestHandler> logger;
-    
     public delegate Task AsyncEventHandler<T>(object? sender, T e);
 
     public RequestHandler(ILogger<RequestHandler> logger, IEnumerable<IEventReceiver> eventReceivers)
@@ -18,22 +18,38 @@ public class RequestHandler : IRequestHandler
         this.logger = logger;
         foreach (var eventReceiver in eventReceivers)
         {
-            RegisterRequestReceiverEventHandler(eventReceiver.OnRequestProcessed);
+            RegisterPreRequestEventReceiver(eventReceiver.PreRequest);
+            RegisterPostRequestEventReceiver(eventReceiver.PostRequest);
         }
     }
 
-    public async Task OnRequestReceived(string method, int delay)
+    public async Task OnPreRequest(string method, int delay)
     {
-        logger.LogInformation("Delegating process event for method {method} with dealy {delay}", method, delay);
-        if (RequestReceived is not null)
+        logger.LogInformation("Delegating process pre event for method {method} with dealy {delay}", method, delay);
+        if (PreRequest is not null)
         {
             RequestEventArgs args = new RequestEventArgs() { Delay = delay, Method = method };
-            await RequestReceived.Invoke(this, args);
+            await PreRequest.Invoke(this, args);
+        }
+    }
+    
+    public async Task OnPostRequest(string method, int delay)
+    {
+        logger.LogInformation("Delegating process post event for method {method} with dealy {delay}", method, delay);
+        if (PostRequest is not null)
+        {
+            RequestEventArgs args = new RequestEventArgs() { Delay = delay, Method = method };
+            await PostRequest.Invoke(this, args);
         }
     }
 
-    public void RegisterRequestReceiverEventHandler(AsyncEventHandler<RequestEventArgs> a)
+    public void RegisterPreRequestEventReceiver(AsyncEventHandler<RequestEventArgs> a)
     {
-        RequestReceived += a;
+        PreRequest += a;
+    }
+    
+    public void RegisterPostRequestEventReceiver(AsyncEventHandler<RequestEventArgs> a)
+    {
+        PostRequest += a;
     }
 }

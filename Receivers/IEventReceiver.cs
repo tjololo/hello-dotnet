@@ -5,6 +5,8 @@ namespace hello_dotnet.Receivers;
 
 public interface IEventReceiver
 {
-    public Task OnRequestProcessed(object? sender, RequestEventArgs args);
+    public Task PreRequest(object? sender, RequestEventArgs args);
+    
+    public Task PostRequest(object? sender, RequestEventArgs args);
     
 }
