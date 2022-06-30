@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace hello_dotnet.Events;
+namespace hello_dotnet.Invokers;
 
 public class RequestEventArgs : EventArgs
 {

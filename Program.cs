@@ -1,7 +1,8 @@
 using System;
 using hello_dotnet.Downstream;
-using hello_dotnet.Events;
 using hello_dotnet.Factories;
+using hello_dotnet.Invokers;
+using hello_dotnet.Receivers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -25,10 +26,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Run();
 
@@ -65,17 +63,16 @@ void ConfigureService(IServiceCollection services, ConfigurationManager config)
     {
         services.AddScoped<IDownstreamService, SimpleDownstreamService>();
     }
+
     services.AddTransient<IRequestHandler, RequestHandler>();
-    services.AddTransient<IEventReceiver, EventsReceivers>();
-    services.Configure<HostOptions>(options =>
-    {
-        options.ShutdownTimeout = TimeSpan.FromSeconds(timeout);
-    });
+    services.AddTransient<IEventReceiver, EventsReceiver1>();
+    services.AddTransient<IEventReceiver, EventsReceiver2>();
+    services.Configure<HostOptions>(options => { options.ShutdownTimeout = TimeSpan.FromSeconds(timeout); });
 }
 
 int GetShutdownTimeout()
 {
-    var envvar = System.Environment.GetEnvironmentVariable("SHUTDOWN_TIMEOUT");
+    var envvar = Environment.GetEnvironmentVariable("SHUTDOWN_TIMEOUT");
     if (Int32.TryParse(envvar, out int timeout))
     {
         return timeout;

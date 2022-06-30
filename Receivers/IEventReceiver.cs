@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
+using hello_dotnet.Invokers;
 
-namespace hello_dotnet.Events;
+namespace hello_dotnet.Receivers;
 
 public interface IEventReceiver
 {

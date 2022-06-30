@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using hello_dotnet.Receivers;
 using Microsoft.Extensions.Logging;
 
-namespace hello_dotnet.Events;
+namespace hello_dotnet.Invokers;
 
 public class RequestHandler : IRequestHandler
 {
@@ -11,10 +13,10 @@ public class RequestHandler : IRequestHandler
     
     public delegate Task AsyncEventHandler<T>(object? sender, T e);
 
-    public RequestHandler(ILogger<RequestHandler> logger, IEventReceiver? eventReceiver)
+    public RequestHandler(ILogger<RequestHandler> logger, IEnumerable<IEventReceiver> eventReceivers)
     {
         this.logger = logger;
-        if (eventReceiver is not null)
+        foreach (var eventReceiver in eventReceivers)
         {
             RegisterRequestReceiverEventHandler(eventReceiver.OnRequestProcessed);
         }
@@ -28,18 +30,6 @@ public class RequestHandler : IRequestHandler
             RequestEventArgs args = new RequestEventArgs() { Delay = delay, Method = method };
             await RequestReceived.Invoke(this, args);
         }
-    }
-
-    public async Task onRequestProcessed(object? sender, RequestEventArgs args)
-    {
-        logger.LogInformation($"Event processing for method {args.Method}");
-        await Task.Delay(args.Delay);
-        logger.LogInformation("Event processed 1111111");
-    }
-
-    public async Task RegisterHandlers()
-    {
-        RequestReceived += this.onRequestProcessed;
     }
 
     public void RegisterRequestReceiverEventHandler(AsyncEventHandler<RequestEventArgs> a)
