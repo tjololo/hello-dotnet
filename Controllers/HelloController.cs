@@ -26,6 +26,7 @@ namespace hello_dotnet.Controllers
         {
             await Task.Delay(sleep * 1000);
             var unusedString = "testing";
+            
             var headers = new Dictionary<string, string>();
             foreach (var header in Request.Headers)
             {
