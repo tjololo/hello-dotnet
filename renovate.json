@@ -1,13 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": [
+    "config:recommended"
+  ],
   "description": "Groups minor and patch updates together in a single PR, and treat NPM 0.x.x updates as major updates.",
-  "stabilityDays": 1,
+  "minimumReleaseAge": "1 day",
   "timezone": "Europe/Oslo",
   "internalChecksFilter": "strict",
-  "schedule": ["before 07:00 on Thursday"],
+  "schedule": [
+    "before 07:00 on Thursday"
+  ],
   "configMigration": true,
-  "ignorePresets": ["group:monorepos"],
+  "ignorePresets": [
+    "group:monorepos"
+  ],
   "packageRules": [
     {
       "matchManagers": [
@@ -18,8 +24,13 @@
         "nuget"
       ],
       "groupName": "{{manager}} non-major dependencies",
-      "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupSlug": "{{manager}}-minor-patch"
     }
   ]
