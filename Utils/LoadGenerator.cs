@@ -1,17 +1,10 @@
-using System;
 using System.Diagnostics;
-using System.Threading;
 
 namespace hello_dotnet.Utils
 {
-    public class LoadGenerator
+    public static class LoadGenerator
     {
-
-        public LoadGenerator()
-        {
-        }
-
-        public static float ConsumeCPU(int percentage, int secondsToRun)
+        public static float ConsumeCpu(int percentage, int secondsToRun)
         {
 
             float counter = 0;

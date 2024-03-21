@@ -1,33 +1,20 @@
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
+namespace hello_dotnet.Downstream;
 
-namespace hello_dotnet.Downstream
+public class SimpleDownstreamService : DownstreamBase, IDownstreamService
 {
-    public class SimpleDownstreamService : DownstreamBase, IDownstreamService
+    private readonly IConfiguration _config;
+    public SimpleDownstreamService(ILogger<SimpleDownstreamService> logger, IConfiguration configuration, HttpClient httpClient) : base(logger, httpClient)
     {
-        private readonly IConfiguration _config;
-        private readonly ILogger<SimpleDownstreamService> _logger;
-        private readonly HttpClient _httpClient;
-        public SimpleDownstreamService(ILogger<SimpleDownstreamService> logger, IConfiguration configuration, HttpClient httpClient) : base(logger, httpClient)
+        _config = configuration;
+    }
+    public async Task<CacheResponse> GetAsyncDownstream(string name)
+    {
+        var downStream = _config["Downstream:URL"];
+        if (_config["Downstream:Enabled"] == "True" && downStream != null)
         {
-            _config = configuration;
-            _logger = logger;
-            _httpClient = httpClient;
+            return new CacheResponse(await DoDownstreamHttpCall(downStream), "no cache");
         }
-        public async Task<CacheResponse> GetAsyncDownstream(string name)
-        {
-            var enabled = _config["Downstream:Enabled"];
-            if (_config["Downstream:Enabled"] == "True")
-            {
-                var downStream = _config["Downstream:URL"];
-                return new CacheResponse(await DoDownstreamHttpCall(downStream), "no cache");
-            }
-            else
-            {
-                return await Task.FromResult(new CacheResponse("No downstream configured", "N/A"));
-            }
-        }
+
+        return await Task.FromResult(new CacheResponse("No downstream configured", "N/A"));
     }
 }

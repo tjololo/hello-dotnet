@@ -1,28 +1,26 @@
-using System.Threading.Tasks;
 using hello_dotnet.Invokers;
-using Microsoft.Extensions.Logging;
 
 namespace hello_dotnet.Receivers;
 
-public class EventsReceiver1: IEventReceiver
+public class EventsReceiver1 : IEventReceiver
 {
-    private readonly ILogger<EventsReceiver1> logger;
+    private readonly ILogger<EventsReceiver1> _logger;
     public EventsReceiver1(ILogger<EventsReceiver1> logger)
     {
-        this.logger = logger;
+        _logger = logger;
     }
 
     public async Task PreRequest(object? sender, RequestEventArgs args)
     {
-        logger.LogInformation($"Pre Event processing for method {args.Method} in receiver 1");
+        _logger.LogInformation("Pre Event processing for method {Method} in receiver 1", args.Method);
         await Task.Delay(args.Delay);
-        logger.LogInformation("Pre Event processed in receiver 1");
+        _logger.LogInformation("Pre Event processed in receiver 1");
     }
-    
+
     public async Task PostRequest(object? sender, RequestEventArgs args)
     {
-        logger.LogInformation($"Post Event processing for method {args.Method} in receiver 1");
+        _logger.LogInformation("Post Event processing for method {Method} in receiver 1", args.Method);
         await Task.Delay(args.Delay);
-        logger.LogInformation("Post Event processed in receiver 1");
+        _logger.LogInformation("Post Event processed in receiver 1");
     }
 }
