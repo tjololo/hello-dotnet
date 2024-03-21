@@ -5,7 +5,7 @@ namespace hello_dotnet.Downstream;
 public class MemCacheDownStreamService : DownstreamBase, IDownstreamService
 {
     private readonly IConfiguration _config;
-    private IMemoryCache _cache;
+    private readonly IMemoryCache _cache;
 
     private readonly MemoryCacheEntryOptions _memCacheOptions = new MemoryCacheEntryOptions()
         .SetSlidingExpiration(TimeSpan.FromSeconds(5))
