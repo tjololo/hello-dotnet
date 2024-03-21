@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
+﻿using Microsoft.AspNetCore.Mvc;
 using hello_dotnet.Downstream;
 using hello_dotnet.Models;
 using hello_dotnet.Utils;
@@ -25,7 +21,7 @@ namespace hello_dotnet.Controllers
         public async Task<HelloResponse> Get(int sleep = 0, string name = "")
         {
             await Task.Delay(sleep * 1000);
-            var headers = new Dictionary<string, string>();
+            var headers = new Dictionary<string, string?>();
             foreach (var header in Request.Headers)
             {
                 headers.Add(header.Key, header.Value);
@@ -50,7 +46,7 @@ namespace hello_dotnet.Controllers
             }
             catch (DownstreamConfigException e)
             {
-                _logger.LogError("Configuration error with downstream", e);
+                _logger.LogError(e, "Configuration error with downstream");
                 return await Task.FromResult(StatusCode(503, "Downstream call failed"));
             }
         }
@@ -65,9 +61,9 @@ namespace hello_dotnet.Controllers
         public async Task<string> LoadCpu(int time = 1, int load = 10)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            LoadGenerator.ConsumeCPU(load, time);
+            LoadGenerator.ConsumeCpu(load, time);
             watch.Stop();
-            return await Task.FromResult(string.Join(" ", "CPU load for", watch.ElapsedMilliseconds/1000 , "seconds").Trim());
+            return await Task.FromResult(string.Join(" ", "CPU load for", watch.ElapsedMilliseconds / 1000, "seconds").Trim());
         }
     }
 }
