@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace hello_dotnet.Utils
 {
-    public class LoadGenerator
+    public static class LoadGenerator
     {
         public static float ConsumeCpu(int percentage, int secondsToRun)
         {

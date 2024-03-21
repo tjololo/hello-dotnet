@@ -5,7 +5,7 @@ namespace hello_dotnet.Downstream;
 public class RedisChacheDownstreamService : DownstreamBase, IDownstreamService
 {
     private readonly IConfiguration _config;
-    private IDistributedCache _cache;
+    private readonly IDistributedCache _cache;
 
     public RedisChacheDownstreamService(ILogger<MemCacheDownStreamService> logger, IConfiguration configuration,
         HttpClient httpClient, IDistributedCache cache) : base(logger, httpClient)
