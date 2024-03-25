@@ -46,16 +46,16 @@ void ConfigureService(IServiceCollection services, ConfigurationManager config)
         {
             opttions.Configuration = config.GetSection("Redis")["ConnectionString"];
         });
-        services.AddScoped<IDownstreamService, RedisChacheDownstreamService>();
+        services.AddDownstreamService<RedisChacheDownstreamService>();
     }
     else if (config["Cache:MemCache"] == "True")
     {
         services.AddMemoryCache();
-        services.AddScoped<IDownstreamService, MemCacheDownStreamService>();
+        services.AddDownstreamServiceWithCustomHandler<MemCacheDownStreamService, ForwardForHttpClientHandler>();
     }
     else
     {
-        services.AddScoped<IDownstreamService, SimpleDownstreamService>();
+        services.AddDownstreamService<SimpleDownstreamService>();
     }
 
     services.AddTransient<IRequestHandler, RequestHandler>();

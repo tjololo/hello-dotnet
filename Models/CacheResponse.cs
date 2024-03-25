@@ -1,4 +1,4 @@
-namespace hello_dotnet
+namespace hello_dotnet.Models
 {
     public class CacheResponse
     {

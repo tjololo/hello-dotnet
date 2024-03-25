@@ -1,3 +1,5 @@
+using hello_dotnet.Models;
+
 namespace hello_dotnet.Downstream;
 
 public class DownstreamBase

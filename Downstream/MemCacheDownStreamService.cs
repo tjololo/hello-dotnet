@@ -1,3 +1,4 @@
+using hello_dotnet.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace hello_dotnet.Downstream;
