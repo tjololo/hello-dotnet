@@ -13,5 +13,6 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19 AS final
 WORKDIR /app
 COPY --from=build-env /app/out .
+COPY --from=build-env /usr/share/zoneinfo/Europe/Oslo /usr/share/zoneinfo/Europe/Oslo
 USER app
 ENTRYPOINT ["dotnet", "hello-dotnet.dll"]

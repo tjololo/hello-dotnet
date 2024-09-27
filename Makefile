@@ -12,6 +12,12 @@ build-load-dev-image-archive:
 	podman save -o hello-dotnet-dev.tar hello-dotnet:dev
 	kind load image-archive hello-dotnet-dev.tar
 
+build-image:
+	podman build -t hello-dotnet:dev -f Dockerfile .
+
+run-image:
+	podman run -it --rm -p 5005:5005 hello-dotnet:dev
+
 deploy-traefik: 
 	helm repo add traefik https://traefik.github.io/charts      
 	helm repo update
