@@ -14,7 +14,9 @@
   "ignorePresets": [
     "group:monorepos"
   ],
-  "ignoreDeps": ["Microsoft.ApplicationInsights.AspNetCore"],
+  "ignoreDeps": [
+    "Microsoft.ApplicationInsights.AspNetCore"
+  ],
   "packageRules": [
     {
       "matchManagers": [
@@ -25,14 +27,14 @@
         "nuget"
       ],
       "groupName": "{{manager}} non-major dependencies",
-      "matchPackagePatterns": [
-        "*"
-      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
-      "groupSlug": "{{manager}}-minor-patch"
+      "groupSlug": "{{manager}}-minor-patch",
+      "matchPackageNames": [
+        "*"
+      ]
     }
   ]
 }
