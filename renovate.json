@@ -35,6 +35,13 @@
       "matchPackageNames": [
         "*"
       ]
+    },
+    {
+      "matchManagers": [
+        "dockerfile",
+        "github-actions"
+      ],
+      "pinDigests": true
     }
   ]
 }
