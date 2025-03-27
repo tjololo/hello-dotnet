@@ -41,6 +41,8 @@
         "dockerfile",
         "github-actions"
       ],
+      "groupName": "pin",
+      "groupSlug": "pin",
       "pinDigests": true
     }
   ]
