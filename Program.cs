@@ -86,7 +86,7 @@ void ConfigureOtel(IServiceCollection services, ConfigurationManager config)
     }
     var otel = services.AddOpenTelemetry();
     var otelpEndpoint = config["Otel:Endpoint"];
-    var resurceBuilder = ResourceBuilder.CreateDefault();
+    var resurceBuilder = ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector();
     // Read and add k8s.pod.uuid if envvar set
     var podUid = Environment.GetEnvironmentVariable("POD_UID");
     if (!string.IsNullOrEmpty(podUid))
