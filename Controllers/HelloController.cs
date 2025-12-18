@@ -77,7 +77,7 @@ namespace hello_dotnet.Controllers
             TimeZoneInfo norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Oslo");
             DateTime norwegianNow = TimeZoneInfo.ConvertTime(DateTime.Now, norwegianTimeZone);
 
-            string dateGenerated = norwegianNow.ToString("dd.MM.yyyy HH:mm:ss",CultureInfo.InvariantCulture);
+            string dateGenerated = norwegianNow.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             return dateGenerated;
         }
     }
