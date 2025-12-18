@@ -7,6 +7,8 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Logs;
 using OpenTelemetry;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,29 +96,32 @@ void ConfigureOtel(IServiceCollection services, ConfigurationManager config)
     }
     var otel = services.AddOpenTelemetry();
     var otelpEndpoint = config["Otel:Endpoint"];
-    if (string.IsNullOrEmpty(otelpEndpoint))
+    var resurceBuilder = ResourceBuilder.CreateDefault();
+    // Read and add k8s.pod.uuid if envvar set
+    var podUuid = Environment.GetEnvironmentVariable("POD_UUID");
+    if (!string.IsNullOrEmpty(podUuid))
     {
-        return;
+        resurceBuilder.AddAttributes(new Dictionary<string, object>
+        {
+            ["k8s.pod.uuid"] = podUuid
+        });
     }
-
     otel.WithMetrics(metrics =>
     {
         metrics.AddAspNetCoreInstrumentation();
         metrics.AddHttpClientInstrumentation();
-        metrics.AddOtlpExporter(otlp =>
-        {
-            otlp.Endpoint = new Uri(otelpEndpoint);
-        });
+        metrics.SetResourceBuilder(resurceBuilder);
     });
     otel.WithTracing(tracing =>
     {
         tracing.AddAspNetCoreInstrumentation();
         tracing.AddHttpClientInstrumentation();
-        tracing.AddOtlpExporter(otlp =>
-        {
-            otlp.Endpoint = new Uri(otelpEndpoint);
-        });
+        tracing.SetResourceBuilder(resurceBuilder);
     });
+    if (!string.IsNullOrEmpty(otelpEndpoint))
+    {
+        otel.UseOtlpExporter(OtlpExportProtocol.Grpc, new Uri(otelpEndpoint));
+    }
 }
 
 int GetShutdownTimeout()
