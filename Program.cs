@@ -88,12 +88,12 @@ void ConfigureOtel(IServiceCollection services, ConfigurationManager config)
     var otelpEndpoint = config["Otel:Endpoint"];
     var resurceBuilder = ResourceBuilder.CreateDefault();
     // Read and add k8s.pod.uuid if envvar set
-    var podUuid = Environment.GetEnvironmentVariable("POD_UUID");
-    if (!string.IsNullOrEmpty(podUuid))
+    var podUid = Environment.GetEnvironmentVariable("POD_UID");
+    if (!string.IsNullOrEmpty(podUid))
     {
         resurceBuilder.AddAttributes(new Dictionary<string, object>
         {
-            ["k8s.pod.uuid"] = podUuid
+            ["k8s.pod.uid"] = podUid
         });
     }
     otel.WithMetrics(metrics =>
