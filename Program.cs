@@ -14,17 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 if ("true".Equals(builder.Configuration["Otel:Enabled"]))
 {
-    builder.Logging.AddOpenTelemetry(logging =>
-    {
-        var endpoint = builder.Configuration["Otel:Endpoint"];
-        if (!string.IsNullOrEmpty(endpoint))
-        {
-            logging.AddOtlpExporter(otlpOptions =>
-            {
-                otlpOptions.Endpoint = new Uri(endpoint);
-            });
-        }
-    });
+    builder.Logging.AddOpenTelemetry();
 }
 ConfigureApp(builder.Configuration);
 ConfigureService(builder.Services, builder.Configuration);
