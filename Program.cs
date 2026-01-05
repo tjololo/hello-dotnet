@@ -12,10 +12,6 @@ using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if ("true".Equals(builder.Configuration["Otel:Enabled"]))
-{
-    builder.Logging.AddOpenTelemetry();
-}
 ConfigureApp(builder.Configuration);
 ConfigureService(builder.Services, builder.Configuration);
 
@@ -86,27 +82,22 @@ void ConfigureOtel(IServiceCollection services, ConfigurationManager config)
     }
     var otel = services.AddOpenTelemetry();
     var otelpEndpoint = config["Otel:Endpoint"];
-    var resurceBuilder = ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector();
-    // Read and add k8s.pod.uuid if envvar set
-    var podUid = Environment.GetEnvironmentVariable("POD_UID");
-    if (!string.IsNullOrEmpty(podUid))
-    {
-        resurceBuilder.AddAttributes(new Dictionary<string, object>
-        {
-            ["k8s.pod.uid"] = podUid
-        });
-    }
+    var resourceBuilder = CreateOtelResourceBuilder();
     otel.WithMetrics(metrics =>
     {
         metrics.AddAspNetCoreInstrumentation();
         metrics.AddHttpClientInstrumentation();
-        metrics.SetResourceBuilder(resurceBuilder);
+        metrics.SetResourceBuilder(resourceBuilder);
     });
     otel.WithTracing(tracing =>
     {
         tracing.AddAspNetCoreInstrumentation();
         tracing.AddHttpClientInstrumentation();
-        tracing.SetResourceBuilder(resurceBuilder);
+        tracing.SetResourceBuilder(resourceBuilder);
+    });
+    otel.WithLogging(logging =>
+    {
+        logging.SetResourceBuilder(resourceBuilder);
     });
     if (!string.IsNullOrEmpty(otelpEndpoint))
     {
@@ -125,4 +116,19 @@ int GetShutdownTimeout()
     {
         return 5;
     }
+}
+
+ResourceBuilder CreateOtelResourceBuilder()
+{
+    var resourceBuilder = ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector();
+    // Read and add k8s.pod.uuid if envvar set
+    var podUid = Environment.GetEnvironmentVariable("POD_UID");
+    if (!string.IsNullOrEmpty(podUid))
+    {
+        resourceBuilder.AddAttributes(new Dictionary<string, object>
+        {
+            ["k8s.pod.uid"] = podUid
+        });
+    }
+    return resourceBuilder;
 }

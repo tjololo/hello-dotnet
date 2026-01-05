@@ -42,6 +42,34 @@ namespace hello_dotnet.Controllers
             return await Task.FromResult(resp);
         }
 
+        [HttpGet("log")]
+        public async Task<HelloResponse> Log(string name = "")
+        {
+            var length = name.Length;
+            if (length > 26)
+            {
+                length = 26;
+            }
+            var nameSub = name.Substring(0, length);
+            _logger.LogDebug($"Debuglog for name {nameSub}");
+            _logger.LogInformation($"Infolog for name {nameSub}");
+            _logger.LogWarning($"Warninglog for name {nameSub}");
+            _logger.LogError($"Errorlog for name {nameSub}");
+            _logger.LogCritical($"Criticallog for name {nameSub}");
+            var headers = new Dictionary<string, string?>();
+            foreach (var header in Request.Headers)
+            {
+                headers.Add(header.Key, header.Value);
+            }
+            var resp = new HelloResponse()
+            {
+                Message = "Hello",
+                ReqParam = name,
+                ServerHeaders = headers
+            };
+            return await Task.FromResult(resp);
+        }
+
         [HttpGet("calldown")]
         public async Task<ActionResult<HttpResponseMessage>> Downstream(string name = "")
         {
