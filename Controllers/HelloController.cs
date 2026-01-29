@@ -19,8 +19,12 @@ namespace hello_dotnet.Controllers
         }
 
         [HttpGet("hello")]
-        public async Task<HelloResponse> Get(int sleep = 0, string name = "")
+        public async Task<ActionResult<HelloResponse>> Get(int sleep = 0, string name = "", int responsCode = 200)
         {
+            if (responsCode < 100 || responsCode > 599)
+            {
+                return BadRequest("Invalid HTTP status code");
+            }
             await Task.Delay(sleep * 1000);
             var headers = new Dictionary<string, string?>();
             var greeting = "Hello";
@@ -39,7 +43,7 @@ namespace hello_dotnet.Controllers
                 ReqParam = name,
                 ServerHeaders = headers
             };
-            return await Task.FromResult(resp);
+            return StatusCode(responsCode, resp);
         }
 
         [HttpGet("log")]
